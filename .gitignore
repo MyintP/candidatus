@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+.env.local
+*.log
+.DS_Store
+
+# Personal resume content synced from Resumes_Bio for the local-only Generate
+# feature - never committed. See scripts/sync-tiers.mjs.
+src/data/resume-tiers.local.json
