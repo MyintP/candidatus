@@ -1,8 +1,8 @@
 import React from 'react'
 import { getBand } from '../lib/vsf-scorer.js'
 
-const MATCH_COLOURS = { 'STRONG': '#f97316', 'MODERATE': '#d19900', 'WEAK': '#a13544' }
-const APPLY_COLOURS = { 'STRONG YES': '#f97316', 'YES': '#ea580c', 'BORDERLINE': '#d19900', 'NO': '#a13544' }
+const MATCH_COLOURS = { 'STRONG': '#1c7a4d', 'MODERATE': '#a8792f', 'WEAK': '#a13544' }
+const APPLY_COLOURS = { 'STRONG YES': '#1c7a4d', 'YES': '#1f2a44', 'BORDERLINE': '#a8792f', 'NO': '#a13544' }
 
 export default function JobResults({ scores, jobs, role, region, onSelectJob, onReset }) {
   const sorted = [...scores].sort((a, b) => parseFloat(b.overallScore) - parseFloat(a.overallScore))

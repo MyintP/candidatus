@@ -2,8 +2,8 @@ import React from 'react'
 import { rankGaps } from '../lib/gap-analyser.js'
 import { getBand } from '../lib/vsf-scorer.js'
 
-const PRIORITY_COLOURS = { HIGH: '#a13544', MEDIUM: '#d19900', LOW: '#437a22' }
-const APPLY_COLOURS = { 'STRONG YES': '#f97316', 'YES': '#ea580c', 'BORDERLINE': '#d19900', 'NO': '#a13544' }
+const PRIORITY_COLOURS = { HIGH: '#a13544', MEDIUM: '#a8792f', LOW: '#1c7a4d' }
+const APPLY_COLOURS = { 'STRONG YES': '#1c7a4d', 'YES': '#1f2a44', 'BORDERLINE': '#a8792f', 'NO': '#a13544' }
 
 export default function GapAnalysis({ score, cvText, role, onSelectGap, onBack }) {
   const band = getBand(score.overallScore)
@@ -89,8 +89,8 @@ export default function GapAnalysis({ score, cvText, role, onSelectGap, onBack }
         </div>
       )}
 
-      <div className="apply-block" style={{ borderColor: APPLY_COLOURS[score.applyRecommendation] || '#d19900' }}>
-        <strong style={{ color: APPLY_COLOURS[score.applyRecommendation] || '#d19900' }}>{score.applyRecommendation}</strong>
+      <div className="apply-block" style={{ borderColor: APPLY_COLOURS[score.applyRecommendation] || '#a8792f' }}>
+        <strong style={{ color: APPLY_COLOURS[score.applyRecommendation] || '#a8792f' }}>{score.applyRecommendation}</strong>
         <p>{score.applyRationale}</p>
       </div>
     </div>
