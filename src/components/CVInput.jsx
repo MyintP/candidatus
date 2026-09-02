@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
+import ApiKeyBanner from './ApiKeyBanner.jsx'
+import { hasApiKey as checkHasApiKey } from '../lib/api-key.js'
 
 const SAMPLE_CV = `Alex Morgan — Enterprise Architect
 Melbourne, VIC, Australia
@@ -39,7 +41,8 @@ Microsoft Azure Solutions Architect (AZ-305) — Microsoft
 PMP — Project Management Institute`
 
 export default function CVInput({ cvText, setCvText, role, setRole, region, setRegion, onRun, error }) {
-  const hasApiKey = import.meta.env.VITE_ANTHROPIC_API_KEY && import.meta.env.VITE_ANTHROPIC_API_KEY !== 'sk-ant-...'
+  const [, setKeyVersion] = useState(0) // bump to force a re-check of localStorage after a key is saved
+  const hasApiKey = checkHasApiKey()
 
   return (
     <div className="input-screen">
@@ -52,9 +55,7 @@ export default function CVInput({ cvText, setCvText, role, setRole, region, setR
       </div>
 
       {!hasApiKey && (
-        <div className="alert alert-warning">
-          <strong>API key required.</strong> Add your Anthropic API key to <code>.env</code> to enable scoring. See README for setup instructions.
-        </div>
+        <ApiKeyBanner onSaved={() => setKeyVersion(v => v + 1)} />
       )}
 
       {error && (

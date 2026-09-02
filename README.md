@@ -2,13 +2,27 @@
 
 **Phil Myint · Brisbane**
 
+**Live:** https://myintp.github.io/candidatus/
+
 > *Stop applying blind. Know exactly where you stand — and what to do about it.*
 
-A personal, private tool: score your CV against a job description across five
-weighted dimensions, see the gaps, get a learning path — then paste the same
-job description in and get a tailored resume and cover letter generated from
-your own real career facts, tracked in a sidebar so you're not doing this in
-a folder of two hundred loose Word documents.
+A personal career tool: score your CV against a job description across five
+weighted dimensions, see the gaps, get a learning path — then (running
+locally) paste the same job description in and get a tailored resume and
+cover letter generated from your own real career facts, tracked in a sidebar
+so you're not doing this in a folder of two hundred loose Word documents.
+
+The scoring/gap/learning-path features are deployed publicly at the link
+above. **Generate** (tailored resume + cover letter, which reads your real
+resume content) only runs locally — see below.
+
+### Using your own API key
+
+The deployed site has no Anthropic key baked in — nobody's key is exposed by
+making this public. Instead, paste your own key into the banner shown when
+you first try to score a CV; it's kept only in your browser's `localStorage`
+and sent nowhere except directly to Anthropic from your own requests. Get a
+key at [console.anthropic.com](https://console.anthropic.com).
 
 ---
 
@@ -43,11 +57,11 @@ keep notes on it in the same place.
 
 **Local-only by design, off by default.** It processes your real
 master-resume content and this app calls Claude directly from the browser —
-fine for `npm run dev` on your own machine. If this ever gets built and
-deployed anywhere public, keep `VITE_ENABLE_GENERATE` unset in that
-environment: with the flag unset, Vite dead-code-eliminates the entire
-feature (components, lib code, tier data) out of the production bundle —
-confirmed by build.
+fine for `npm run dev` on your own machine. The public deploy
+(`.github/workflows/deploy.yml`) deliberately leaves `VITE_ENABLE_GENERATE`
+unset: with the flag unset, Vite dead-code-eliminates the entire feature
+(components, lib code, tier data) out of the production bundle — confirmed
+by build, and by grepping the built bundle for Generate-only strings.
 
 - Run `npm run sync-tiers` after any edit to
   `D:\ArchivePre2026\04_Personal\Resumes_Bio\resume-automation\resume_data.json`
@@ -72,6 +86,7 @@ candidatus/
 ├── vite.config.js
 ├── .env.example
 ├── index.html
+├── .github/workflows/deploy.yml — builds + deploys to GitHub Pages (no secrets)
 ├── scripts/
 │   └── sync-tiers.mjs       — copies resume tiers from Resumes_Bio (gitignored dest)
 ├── public/
@@ -80,6 +95,7 @@ candidatus/
     ├── App.jsx
     ├── components/
     │   ├── CVInput.jsx          — CV paste area + role/region intake
+    │   ├── ApiKeyBanner.jsx     — visitor-supplied Anthropic key entry
     │   ├── JobResults.jsx       — Live job listings with fit scores
     │   ├── GapAnalysis.jsx      — Ranked gap report with evidence
     │   ├── LearningPath.jsx     — Personalised learning curve per gap
@@ -93,6 +109,7 @@ candidatus/
         ├── gap-analyser.js      — Gap identification and ranking
         ├── learning-path.js     — Learning curve generator
         ├── claude.js            — Anthropic API calls
+        ├── api-key.js           — visitor's key, localStorage only
         ├── generator.js         — Generate: tailored resume/letter prompts
         ├── docx-export.js       — Generate: client-side .docx rendering
         ├── history.js           — Generate: localStorage job tracking
@@ -102,6 +119,10 @@ candidatus/
 ---
 
 ## Setup
+
+For scoring only, no setup is needed — use the live site and paste in your
+own Anthropic key when prompted. The steps below are for running locally
+(required for Generate).
 
 ### 1. Get API keys
 

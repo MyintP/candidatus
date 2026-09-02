@@ -1,0 +1,48 @@
+name: Deploy Candidatus to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm install
+      - run: npm run build
+        env:
+          GITHUB_PAGES: "true"
+          # Deliberately no VITE_ANTHROPIC_API_KEY, VITE_JOOBLE_API_KEY, or
+          # VITE_ENABLE_GENERATE here. Each visitor supplies their own
+          # Anthropic key at runtime (kept in their browser's localStorage -
+          # see src/lib/api-key.js), and Generate (which reads personal
+          # resume data) is dead-code-eliminated out of this build entirely
+          # since VITE_ENABLE_GENERATE is unset.
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment

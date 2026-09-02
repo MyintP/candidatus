@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  // Served at myintp.github.io/candidatus/ via GitHub Pages.
+  base: process.env.GITHUB_PAGES ? '/candidatus/' : '/',
   server: {
     proxy: {
       '/jooble-api': {

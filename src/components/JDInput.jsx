@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { tiers, tierNames, tiersAvailable } from '../lib/tiers.js'
+import { hasApiKey as checkHasApiKey } from '../lib/api-key.js'
+import ApiKeyBanner from './ApiKeyBanner.jsx'
 
 export default function JDInput({
   title, setTitle, company, setCompany, sourceUrl, setSourceUrl,
   jdText, setJdText, tierKey, setTierKey, onGenerate, error, busy,
 }) {
-  const hasApiKey = import.meta.env.VITE_ANTHROPIC_API_KEY && import.meta.env.VITE_ANTHROPIC_API_KEY !== 'sk-ant-...'
+  const [, setKeyVersion] = useState(0)
+  const hasApiKey = checkHasApiKey()
 
   return (
     <div className="jd-input-screen">
@@ -25,9 +28,7 @@ export default function JDInput({
         </div>
       )}
       {!hasApiKey && (
-        <div className="alert alert-warning">
-          <strong>API key required.</strong> Add your Anthropic API key to <code>.env</code>.
-        </div>
+        <ApiKeyBanner onSaved={() => setKeyVersion(v => v + 1)} />
       )}
       {error && (
         <div className="alert alert-error"><strong>Error:</strong> {error}</div>

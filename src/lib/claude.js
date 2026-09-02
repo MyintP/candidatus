@@ -1,19 +1,21 @@
 // Claude API calls via Anthropic SDK
-// Note: In production, route through a backend to protect API key
-// For local/personal use, direct browser call is acceptable
+// Note: routes directly from the browser to Anthropic. The key comes from
+// this browser's localStorage (entered by the visitor - see api-key.js), so
+// no secret is ever baked into the deployed bundle.
 
-const ANTHROPIC_API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY
+import { getApiKey } from './api-key.js'
 
 export async function callClaude(systemPrompt, userMessage, maxTokens = 4096) {
-  if (!ANTHROPIC_API_KEY || ANTHROPIC_API_KEY === 'sk-ant-...') {
-    throw new Error('Anthropic API key not configured. Add VITE_ANTHROPIC_API_KEY to your .env file.')
+  const apiKey = getApiKey()
+  if (!apiKey || apiKey === 'sk-ant-...') {
+    throw new Error('No Anthropic API key set. Add yours above to enable scoring.')
   }
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': ANTHROPIC_API_KEY,
+      'x-api-key': apiKey,
       'anthropic-version': '2023-06-01',
       'anthropic-dangerous-direct-browser-access': 'true'
     },
