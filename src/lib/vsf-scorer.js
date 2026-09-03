@@ -1,7 +1,7 @@
 // Five-Dimension Fit Scoring Engine
 // Scores a CV against a job description across five weighted dimensions.
 
-import { callClaude } from './claude.js'
+import { callLLM } from './llm.js'
 
 const FIT_SYSTEM_PROMPT = `You are a rigorous, evidence-based career-fit scoring engine for senior technology roles.
 
@@ -68,7 +68,7 @@ Return JSON in exactly this structure:
   "applyRationale": "One sentence honest assessment"
 }`
 
-  const result = await callClaude(FIT_SYSTEM_PROMPT, userMessage, 2048)
+  const result = await callLLM(FIT_SYSTEM_PROMPT, userMessage, 2048)
 
   try {
     return JSON.parse(result)

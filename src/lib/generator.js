@@ -1,5 +1,5 @@
 // Tailored resume + cover letter generation from a pasted job description.
-// Follows the same callClaude + JSON-with-regex-fallback pattern as
+// Follows the same callLLM + JSON-with-regex-fallback pattern as
 // vsf-scorer.js and gap-analyser.js.
 //
 // HARD CONSTRAINT: both prompts forbid inventing any fact, number or outcome
@@ -7,7 +7,7 @@
 // and rephrase what's given - this mirrors the no-invented-metrics rule the
 // resume-automation Python pipeline enforces on the same source data.
 
-import { callClaude } from './claude.js'
+import { callLLM } from './llm.js'
 
 const NO_INVENTION_RULE = `Rules, no exceptions:
 - Use ONLY facts, figures, employers, titles and achievements present in TIER DATA below.
@@ -52,7 +52,7 @@ Return JSON in exactly this structure:
   ]
 }`
 
-  const result = await callClaude(RESUME_SYSTEM_PROMPT, userMessage, 2048)
+  const result = await callLLM(RESUME_SYSTEM_PROMPT, userMessage, 2048)
   return parseJSON(result, 'tailored resume')
 }
 
@@ -79,7 +79,7 @@ Return JSON in exactly this structure:
   "signOff": "Kind regards,"
 }`
 
-  const result = await callClaude(COVER_LETTER_SYSTEM_PROMPT, userMessage, 1536)
+  const result = await callLLM(COVER_LETTER_SYSTEM_PROMPT, userMessage, 1536)
   return parseJSON(result, 'cover letter')
 }
 

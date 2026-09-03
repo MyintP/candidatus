@@ -1,5 +1,5 @@
 // Gap Analysis and Learning Path Generator
-import { callClaude } from './claude.js'
+import { callLLM } from './llm.js'
 
 const GAP_SYSTEM_PROMPT = `You are a senior enterprise/solution architecture career coach.
 
@@ -41,7 +41,7 @@ Return JSON:
   "cvLanguage": "Rewrite suggestion — how to phrase this capability on a CV once acquired"
 }`
 
-  const result = await callClaude(GAP_SYSTEM_PROMPT, userMessage, 3000)
+  const result = await callLLM(GAP_SYSTEM_PROMPT, userMessage, 3000)
 
   try {
     return JSON.parse(result)

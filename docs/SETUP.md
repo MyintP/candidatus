@@ -1,6 +1,7 @@
 # Candidatus — Setup Guide
 
-**For personal use on your local machine.**
+**Live at https://myintp.github.io/candidatus/ — the steps below are only for
+running locally, which you need for the Generate feature.**
 
 ---
 
@@ -10,12 +11,10 @@
 Download from https://nodejs.org — install the LTS version.
 Verify: `node --version` → should show v18+ or v20+
 
-### 2. Anthropic API Key
-- Go to https://console.anthropic.com
-- Create account → API Keys → Create Key
-- Starts with `sk-ant-...`
-- Cost: ~$0.02–0.05 per full job scan (5 roles scored)
-- New accounts get $5 free credit (~100–250 scans free
+### 2. Google AI (Gemini) API Key — free
+- Go to https://aistudio.google.com/apikey
+- Sign in with a Google account → Create API key
+- No credit card required, no cost — Google's free tier covers normal personal use
 
 ### 3. Jooble API Key (for live Australian jobs)
 - Go to https://jooble.org/api/about

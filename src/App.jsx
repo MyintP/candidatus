@@ -14,11 +14,10 @@ import { generateTailoredResume, generateCoverLetter } from './lib/generator.js'
 import { listEntries, getEntry, saveEntry, updateStatus, deleteEntry } from './lib/history.js'
 
 // Generate (paste-a-JD, tailor-a-resume, track-the-application) is gated off
-// by default. It reads Phil's real master-resume content and this app calls
-// Claude directly from the browser - fine for local `npm run dev` in this
-// private repo. If this is ever built and deployed anywhere public, keep this
-// flag unset in that build's environment so the deployed bundle doesn't ship
-// personal resume content or bake in a usable API key.
+// by default. It reads Phil's real master-resume content and calls Google's
+// Gemini API directly from the browser - fine for local `npm run dev`. The
+// public deploy workflow (.github/workflows/deploy.yml) leaves this flag
+// unset, so the deployed bundle never ships personal resume content.
 const GENERATE_ENABLED = import.meta.env.VITE_ENABLE_GENERATE === 'true'
 
 export default function App() {

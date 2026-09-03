@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { setApiKey } from '../lib/api-key.js'
 
 // Shown when no usable API key is present. Lets a visitor paste their own
-// Anthropic key, kept only in their browser's localStorage - never sent
-// anywhere but directly to Anthropic from their own requests.
+// free Google AI (Gemini) key, kept only in their browser's localStorage -
+// never sent anywhere but directly to Google from their own requests.
 export default function ApiKeyBanner({ onSaved }) {
   const [value, setValue] = useState('')
   const [saved, setSaved] = useState(false)
@@ -25,10 +25,11 @@ export default function ApiKeyBanner({ onSaved }) {
 
   return (
     <div className="alert alert-warning api-key-banner">
-      <strong>Add your Anthropic API key to score a CV.</strong>
+      <strong>Add a free Google AI API key to score a CV.</strong>
       <p className="field-hint" style={{ margin: '4px 0 8px' }}>
-        Kept only in your browser (localStorage) — never sent anywhere but directly to Anthropic.
-        Get one at <a href="https://console.anthropic.com" target="_blank" rel="noreferrer">console.anthropic.com</a>.
+        Kept only in your browser (localStorage) — never sent anywhere but directly to Google.
+        Free, no credit card: get one at{' '}
+        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer">aistudio.google.com/apikey</a>.
       </p>
       <div className="api-key-row">
         <input
@@ -37,7 +38,7 @@ export default function ApiKeyBanner({ onSaved }) {
           value={value}
           onChange={e => setValue(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleSave()}
-          placeholder="sk-ant-..."
+          placeholder="AIzaSy..."
         />
         <button className="btn-secondary" onClick={handleSave} disabled={!value.trim()}>Save key</button>
       </div>

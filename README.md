@@ -18,11 +18,12 @@ resume content) only runs locally — see below.
 
 ### Using your own API key
 
-The deployed site has no Anthropic key baked in — nobody's key is exposed by
-making this public. Instead, paste your own key into the banner shown when
-you first try to score a CV; it's kept only in your browser's `localStorage`
-and sent nowhere except directly to Anthropic from your own requests. Get a
-key at [console.anthropic.com](https://console.anthropic.com).
+The deployed site has no key baked in — nobody's key is exposed by making
+this public. Instead, paste your own **Google AI (Gemini) key** into the
+banner shown when you first try to score a CV; it's kept only in your
+browser's `localStorage` and sent nowhere except directly to Google from
+your own requests. Free, no credit card: get one at
+[aistudio.google.com/apikey](https://aistudio.google.com/apikey).
 
 ---
 
@@ -56,7 +57,7 @@ keep notes on it in the same place.
 ## Generate — tailored resume + cover letter from a pasted JD
 
 **Local-only by design, off by default.** It processes your real
-master-resume content and this app calls Claude directly from the browser —
+master-resume content and this app calls Gemini directly from the browser —
 fine for `npm run dev` on your own machine. The public deploy
 (`.github/workflows/deploy.yml`) deliberately leaves `VITE_ENABLE_GENERATE`
 unset: with the flag unset, Vite dead-code-eliminates the entire feature
@@ -95,7 +96,7 @@ candidatus/
     ├── App.jsx
     ├── components/
     │   ├── CVInput.jsx          — CV paste area + role/region intake
-    │   ├── ApiKeyBanner.jsx     — visitor-supplied Anthropic key entry
+    │   ├── ApiKeyBanner.jsx     — visitor-supplied Gemini key entry
     │   ├── JobResults.jsx       — Live job listings with fit scores
     │   ├── GapAnalysis.jsx      — Ranked gap report with evidence
     │   ├── LearningPath.jsx     — Personalised learning curve per gap
@@ -108,7 +109,7 @@ candidatus/
         ├── vsf-scorer.js        — Five-dimension scoring engine
         ├── gap-analyser.js      — Gap identification and ranking
         ├── learning-path.js     — Learning curve generator
-        ├── claude.js            — Anthropic API calls
+        ├── llm.js               — Gemini API calls
         ├── api-key.js           — visitor's key, localStorage only
         ├── generator.js         — Generate: tailored resume/letter prompts
         ├── docx-export.js       — Generate: client-side .docx rendering
@@ -121,12 +122,12 @@ candidatus/
 ## Setup
 
 For scoring only, no setup is needed — use the live site and paste in your
-own Anthropic key when prompted. The steps below are for running locally
+own free Gemini key when prompted. The steps below are for running locally
 (required for Generate).
 
 ### 1. Get API keys
 
-**Anthropic (Claude):** https://console.anthropic.com → API Keys → Create Key
+**Google AI (Gemini), free:** https://aistudio.google.com/apikey → Create API key
 **Jooble (optional, live job search):** https://jooble.org/api/about → Register → Copy key
 
 ### 2. Install
@@ -141,7 +142,7 @@ npm install
 
 ```bash
 cp .env.example .env
-# Edit .env — add your Anthropic key, and set VITE_ENABLE_GENERATE=true
+# Edit .env — add your Gemini key, and set VITE_ENABLE_GENERATE=true
 ```
 
 ### 4. Sync your resume tiers (for Generate)
@@ -175,7 +176,7 @@ npm run dev
 
 ## Built On
 
-- Claude (Anthropic) for CV analysis, gap intelligence, and tailored generation
+- Gemini (Google AI, free tier) for CV analysis, gap intelligence, and tailored generation
 - Jooble API for live job data (currently mocked — see `src/lib/jooble.js`)
 - React + Vite
 - `docx` for client-side resume/cover-letter rendering

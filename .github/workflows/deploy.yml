@@ -27,9 +27,9 @@ jobs:
       - run: npm run build
         env:
           GITHUB_PAGES: "true"
-          # Deliberately no VITE_ANTHROPIC_API_KEY, VITE_JOOBLE_API_KEY, or
-          # VITE_ENABLE_GENERATE here. Each visitor supplies their own
-          # Anthropic key at runtime (kept in their browser's localStorage -
+          # Deliberately no VITE_GEMINI_API_KEY, VITE_JOOBLE_API_KEY, or
+          # VITE_ENABLE_GENERATE here. Each visitor supplies their own free
+          # Gemini key at runtime (kept in their browser's localStorage -
           # see src/lib/api-key.js), and Generate (which reads personal
           # resume data) is dead-code-eliminated out of this build entirely
           # since VITE_ENABLE_GENERATE is unset.
