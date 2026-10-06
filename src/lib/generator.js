@@ -1,6 +1,6 @@
 // Tailored resume + cover letter generation from a pasted job description.
 // Follows the same callLLM + JSON-with-regex-fallback pattern as
-// vsf-scorer.js and gap-analyser.js.
+// scorer.js and gap-analyser.js.
 //
 // HARD CONSTRAINT: both prompts forbid inventing any fact, number or outcome
 // not already present in the tier data. The model may only select, reorder
@@ -9,12 +9,26 @@
 
 import { callLLM } from './llm.js'
 
-const NO_INVENTION_RULE = `Rules, no exceptions:
-- Use ONLY facts, figures, employers, titles and achievements present in TIER DATA below.
-- Never invent a number, percentage, team size, budget or outcome that isn't already there.
-- Never invent a certification, employer or job title.
-- You may reorder, select a subset, and rephrase wording to speak to the job description's language.
-- If the job description asks for something TIER DATA doesn't cover, leave it out rather than implying it.`
+// Truthfulness rules adapted from Resume-Matcher prompts/templates.py
+// (Apache-2.0, see NOTICE), merged with this project's no-invented-metrics rule.
+const NO_INVENTION_RULE = `CRITICAL TRUTHFULNESS RULES - NEVER VIOLATE:
+1. Use ONLY facts, figures, employers, titles and achievements present in TIER DATA below.
+2. Do not add any skill, tool, technology or certification that TIER DATA does not mention.
+3. Never invent a number, percentage, team size, budget or outcome that isn't already there.
+4. Do not upgrade a title or seniority, and copy dates exactly as given.
+5. Never invent a certification, employer, product name or job title.
+6. You may reorder, select a subset, and rephrase wording to speak to the job description's language.
+7. If the job description asks for something TIER DATA doesn't cover, leave it out rather than implying it.
+8. Plain Australian English. Prefer "led", "designed", "used" over "spearheaded", "architected", "leveraged". No em dashes.`
+
+function gapsBlock(gaps) {
+  if (!gaps) return ''
+  return `
+KEYWORD GUIDANCE (from matching the job ad against the master resume):
+- SAFE TO ADD (proven elsewhere in the master, missing from this tier): ${gaps.injectable.join(', ') || 'none'}
+- DO NOT CLAIM (not in the master at all; never imply these): ${gaps.nonInjectable.join(', ') || 'none'}
+Work the SAFE TO ADD terms into the summary and skills where they are true for this candidate.`
+}
 
 function tierDataBlock(tierData) {
   return `TIER DATA (source of truth - the only facts you may use):
@@ -36,8 +50,9 @@ ${NO_INVENTION_RULE}
 
 Return ONLY valid JSON, no preamble.`
 
-export async function generateTailoredResume(tierData, jdText) {
+export async function generateTailoredResume(tierData, jdText, gaps = null) {
   const userMessage = `${tierDataBlock(tierData)}
+${gapsBlock(gaps)}
 
 JOB DESCRIPTION TO TAILOR FOR:
 ${jdText}
@@ -62,8 +77,9 @@ ${NO_INVENTION_RULE}
 
 Australian English. Return ONLY valid JSON, no preamble.`
 
-export async function generateCoverLetter(tierData, jdText, companyName) {
+export async function generateCoverLetter(tierData, jdText, companyName, gaps = null) {
   const userMessage = `${tierDataBlock(tierData)}
+${gapsBlock(gaps)}
 
 COMPANY: ${companyName || '(not specified - address generically)'}
 

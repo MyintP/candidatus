@@ -78,6 +78,21 @@ by build, and by grepping the built bundle for Generate-only strings.
 
 ---
 
+### Match against the ad (ported from Resume-Matcher)
+
+Generate runs a match step around the tailoring (`src/lib/matcher.js`, adapted from
+[Resume-Matcher](https://github.com/srbhr/Resume-Matcher), Apache-2.0, see `NOTICE`):
+
+1. The LLM extracts the ad's required and preferred skills, keywords and **knock-outs**
+   (degree, clearance, police check, citizenship).
+2. Missing keywords are split into **safe to add** (proven somewhere in the master
+   `resume_data.json`) and **genuine gaps** (never claimed). Both lists go to the
+   generator, which may only use the safe ones.
+3. The tailored result gets an ATS-style score (keywords 55%, skills 25%, sections 20%),
+   a knock-out check, bullet ranking per role and plain-English cleanup.
+
+`npm run sync-tiers` also syncs the plain single-column variants and a combined master text.
+
 ## Repository Structure
 
 ```
@@ -106,7 +121,7 @@ candidatus/
     │   └── GenerateResult.jsx   — Generate: tailored resume + cover letter output
     └── lib/
         ├── jooble.js            — Jooble API integration
-        ├── vsf-scorer.js        — Five-dimension scoring engine
+        ├── scorer.js            — Five-dimension scoring engine
         ├── gap-analyser.js      — Gap identification and ranking
         ├── learning-path.js     — Learning curve generator
         ├── llm.js               — Gemini API calls

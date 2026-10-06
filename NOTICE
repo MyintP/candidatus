@@ -1,0 +1,15 @@
+Candidatus
+==========
+
+src/lib/matcher.js and the truthfulness rules in src/lib/generator.js are
+adapted from Resume-Matcher (https://github.com/srbhr/Resume-Matcher),
+Copyright (c) Saurabh Rai and contributors, licensed under the Apache License,
+Version 2.0. You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Changes: ported from Python to JavaScript; ATS weighting, keyword gap
+analysis (missing / injectable / non-injectable), bullet relevance scoring
+and AI-phrase cleanup adapted; knock-out (mandatory requirement) extraction
+added; "stakeholder" and "scalable" removed from the AI-phrase list.
+
+No code from OpenResume (AGPL-3.0) is included.

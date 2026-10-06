@@ -1,5 +1,5 @@
 import React from 'react'
-import { getBand } from '../lib/vsf-scorer.js'
+import { getBand } from '../lib/scorer.js'
 
 const MATCH_COLOURS = { 'STRONG': '#1c7a4d', 'MODERATE': '#a8792f', 'WEAK': '#a13544' }
 const APPLY_COLOURS = { 'STRONG YES': '#1c7a4d', 'YES': '#1f2a44', 'BORDERLINE': '#a8792f', 'NO': '#a13544' }

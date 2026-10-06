@@ -1,5 +1,6 @@
 import React from 'react'
 import { tierContact } from '../lib/tiers.js'
+import MatchPanel from './MatchPanel.jsx'
 import { resumeToDocxBlob, coverLetterToDocxBlob, downloadBlob } from '../lib/docx-export.js'
 
 function printTarget(target) {
@@ -8,7 +9,7 @@ function printTarget(target) {
 }
 
 export default function GenerateResult({ entry, tierData, onBack, onEdit }) {
-  const { tailored, letter } = entry.generated || {}
+  const { tailored, letter, match } = entry.generated || {}
   if (!tailored || !letter) return null
 
   const fileBase = `${tierContact.name.replace(/\s+/g, '_')}_${(entry.company || 'Application').replace(/\s+/g, '_')}`
@@ -45,6 +46,8 @@ export default function GenerateResult({ entry, tierData, onBack, onEdit }) {
         <button className="btn-secondary" onClick={() => printTarget('letter')}>Print / save letter as PDF</button>
         <button className="btn-ghost" onClick={copyLetterForEmail}>Copy letter for email</button>
       </div>
+
+      <MatchPanel match={match} />
 
       <div className="generate-columns">
         <section className="generate-card" data-print-content="resume">

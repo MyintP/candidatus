@@ -17,3 +17,4 @@ export const tierEducation = loaded?.education ?? []
 export const tierMemberships = loaded?.memberships ?? ''
 export const tiers = loaded?.variants ?? {}
 export const tierNames = Object.keys(tiers)
+export const masterText = loaded?.masterText ?? ''

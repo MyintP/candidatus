@@ -1,6 +1,6 @@
 import React from 'react'
 import { rankGaps } from '../lib/gap-analyser.js'
-import { getBand } from '../lib/vsf-scorer.js'
+import { getBand } from '../lib/scorer.js'
 
 const PRIORITY_COLOURS = { HIGH: '#a13544', MEDIUM: '#a8792f', LOW: '#1c7a4d' }
 const APPLY_COLOURS = { 'STRONG YES': '#1c7a4d', 'YES': '#1f2a44', 'BORDERLINE': '#a8792f', 'NO': '#a13544' }

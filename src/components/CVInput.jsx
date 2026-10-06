@@ -112,7 +112,7 @@ export default function CVInput({ cvText, setCvText, role, setRole, region, setR
             />
           </div>
 
-          <div className="vsf-explainer">
+          <div className="score-explainer">
             <h3>The Five Fit Dimensions</h3>
             {[
               ['Scale of Impact', '25%', 'How far did your work reach?'],

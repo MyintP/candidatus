@@ -8,9 +8,10 @@ import NotesPanel from './components/NotesPanel.jsx'
 import JDInput from './components/JDInput.jsx'
 import GenerateResult from './components/GenerateResult.jsx'
 import { fetchLiveJobs } from './lib/jooble.js'
-import { scoreCV } from './lib/vsf-scorer.js'
-import { tiers, tierNames } from './lib/tiers.js'
+import { scoreCV } from './lib/scorer.js'
+import { tiers, tierNames, masterText, tierContact } from './lib/tiers.js'
 import { generateTailoredResume, generateCoverLetter } from './lib/generator.js'
+import { extractJobKeywords, analyzeKeywordGaps, computeAtsScore, keywordBulletScores, cleanTailored, allText } from './lib/matcher.js'
 import { listEntries, getEntry, saveEntry, updateStatus, deleteEntry } from './lib/history.js'
 
 // Generate (paste-a-JD, tailor-a-resume, track-the-application) is gated off
@@ -102,10 +103,30 @@ export default function App() {
     setGenError(null)
     try {
       const tierData = tiers[tierKey]
-      const [tailored, letter] = await Promise.all([
-        generateTailoredResume(tierData, jdText),
-        generateCoverLetter(tierData, jdText, jdCompany),
+      // 1. What the ad asks for, and which of it this tier already says
+      const jdKeywords = await extractJobKeywords(jdText)
+      // The printed resume always carries the contact/work-rights line (police check, citizenship)
+      const tierText = [allText(tierData), tierData.rights || tierContact?.rights || ''].join(' ')
+      const before = analyzeKeywordGaps(jdKeywords, tierText, masterText || tierText)
+      // 2. Tailor with "safe to add" / "do not claim" guidance
+      const [rawTailored, letter] = await Promise.all([
+        generateTailoredResume(tierData, jdText, before),
+        generateCoverLetter(tierData, jdText, jdCompany, before),
       ])
+      const { tailored, removed } = cleanTailored(rawTailored, jdText)
+      // 3. Score the tailored result the way an ATS would
+      const resumeText = [tailored.headline, tailored.summary, tailored.keySkillsOrdered, tierText].join(' ')
+      const after = analyzeKeywordGaps(jdKeywords, resumeText, masterText || tierText)
+      const ats = computeAtsScore({
+        resumeText,
+        skillsText: tailored.keySkillsOrdered,
+        sectionsPresent: { summary: !!tailored.summary, experience: (tierData.roles || []).length > 0,
+                           education: true, skills: !!tailored.keySkillsOrdered },
+        jdKeywords,
+        gaps: after,
+      })
+      const bulletRanks = keywordBulletScores(tierData.roles || [], jdKeywords)
+      const match = { jdKeywords, before: Math.round(before.currentMatch), ats, bulletRanks, aiPhrasesRemoved: removed }
       const prior = activeId ? getEntry(activeId) : null
       const saved = saveEntry({
         id: activeId,
@@ -116,7 +137,7 @@ export default function App() {
         tierKey,
         status: prior?.status || 'Active',
         notes: prior?.notes || '',
-        generated: { tailored, letter },
+        generated: { tailored, letter, match },
       })
       setActiveId(saved.id)
       refreshEntries()
